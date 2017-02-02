@@ -2,3 +2,4 @@
 *.pyc
 *.pdf
 *.PDF
+.DS_Store
