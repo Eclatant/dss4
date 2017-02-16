@@ -3,3 +3,6 @@
 *.pdf
 *.PDF
 .DS_Store
+*.pem
+*.ppk
+QANDA
