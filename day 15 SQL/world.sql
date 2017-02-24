@@ -5863,7 +5863,13 @@ select * from country;
 select * 
 	from city
 	cross join country;
+    
+select *
+	from city c, country co;
 
+
+select * from city;
+select * from country;
 
 # inner join
 # on 의 조건으로 매칭되는 열만 교차
@@ -5879,18 +5885,20 @@ select *
     join country
     on city.CountryCode = country.Code;
     
+    
 # 나라별 인구가 가장 많은 도시는?
 # join으로 가져오기
+
 select c1.CountryCode, c1.Name, c1.Population
 	from city c1
-    join (select CountryCode, max(Population) as mp
+    join (select CountryCode, Name, max(Population) as mp
 			from city 
 			group by CountryCode) t
 	on c1.CountryCode = t.CountryCode and c1.Population = t.mp;
 
 
 # country 테이블과 다시 조인
-select country.Name, c1.Name, c1.Population
+select country.Name as CountryName, c1.Name, c1.Population
 	from city c1
     join (select CountryCode, max(Population) as mp
 			from city 
@@ -5900,5 +5908,8 @@ select country.Name, c1.Name, c1.Population
     on c1.CountryCode = country.Code
     order by c1.Population desc;
 
+
+select * from city where CountryCode = 'CHN'
+order by Population desc;
 
 # outer 조인은 다음 예제에서 진행 합니다.

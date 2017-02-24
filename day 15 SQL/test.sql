@@ -9,16 +9,23 @@ USE test;
 CREATE TABLE students (
    ID INT(11) NOT NULL AUTO_INCREMENT, # ID 정수형. NULL값 허용하지 않음. 자동 증가하도록 설정
    Name CHAR(35) NOT NULL DEFAULT '', # Bame 문자열 35자. NULL값 허용하지 않음. 기본값 ''
-   Age  int(11) NOT NULL DEFAULT 25,
+   Age  int(11) DEFAULT 25,
    MajorCode VARCHAR(10), # MajorCode 문자열 10자.
-  PRIMARY KEY (ID) # 프라이머리 키는 ID 필드
+   
+   PRIMARY KEY (ID) # 프라이머리 키는 ID 필드
 ) DEFAULT CHARSET=utf8;
+
+
+# primary key
+# table에서 어떤 레코드를 분별할 수 있는 유일한 값을 갖는 필드
+# 대부분의 경우, 유일성을 보장 할 수 있는 것을 채택한다. e.g) 주민등록번호, 전화번호
+# 이름의 경우 중복 가능성이 있기 때문에 primary key로 적당하지 않다.
 
 # students 테이블 조회
 select * from students;
 
 # 데이터 삽입
-insert into students values(1, "Aaron", 31, 'CS');
+insert into students(ID, Name, Age, MajorCode) values(1, "Aaron", 31, 'CS');
 insert into students values(2, "Bob", 30, 'BIO');
 insert into students values(3, "Alice", 24, 'PHIL');
 
@@ -34,14 +41,24 @@ insert into students(Name, Age, MajorCode) values("Bill", 20, 'EE');
 # Name의 default값이 ''이므로 명시하지 않아도 가능
 insert into students(MajorCode) values('EE');
 
+use test;
 # 조건에 부합하는 row의 field 업데이트
-update students set Name = 'Tim' where Name = '';
+update students 
+	set Name = 'Tim' 
+    where Name = '';
+
+
+select * from students;
+
 
 # 조건에 부합하는 row 삭제
-delete from students where Name = 'Tim';
-
+delete from students 
+	where Name = 'Tim';
+    
+    
 # index 생성
 create index students_name_idx ON students (Name);
+drop index students_name_idx on students;
 
 # 이제 인덱스가 생성되었으므로 검색이 더 빨라짐
 select * from students
@@ -115,6 +132,7 @@ select *
 select distinct MajorCode 
 	from students;
     
+#set([1, 1, 2, 3, 4, 1, ])
 
 # 집합 함수
 # sum, avg, count, max, min
@@ -133,21 +151,25 @@ select MajorCode, max(Age), min(Age), avg(Age)
 	from students
     group by MajorCode;
     
+    
 # 그룹화 후 집합 함수를 조건으로 걸고 싶다면 where 사용이 불가능
 select MajorCode, max(Age), min(Age), avg(Age) 
 	from students
     group by MajorCode
     where avg(Age) <= 27; #(X)
     
+    
+
 select MajorCode, max(Age), min(Age), avg(Age) 
 	from students
     where MajorCode = 'CS'
     group by MajorCode;    
     
+    
 select MajorCode, max(Age), min(Age), avg(Age) 
 	from students
     group by MajorCode 
-    having MajorCode = 'CS';
+    having MajorCode ='CS';
     
     
 select MajorCode, max(Age), min(Age), avg(Age) 
@@ -156,6 +178,11 @@ select MajorCode, max(Age), min(Age), avg(Age)
     having avg(Age) <= 27;
     
 # subquery
+select avg(Age)
+	from students;
+
+select * from students where Age > 26.3750;
+
 select * 
 	from students
 where Age > 
@@ -166,10 +193,24 @@ select min(Age)
 	from (select *
 		from students where Age > 26) as t;
             
-            
-select * from students;
+		
 # major table 생성
-# ID, Code, Name, Description
+# 여기서는 workbench의 gui 사용법# ID, Code, Name, Description
+CREATE TABLE majors (
+   Code VARCHAR(10), # MajorCode 문자열 10자.
+   Name VARCHAR(35) NOT NULL DEFAULT '', # Bame 문자열 35자. NULL값 허용하지 않음. 기본값 ''
+   Description VARCHAR(100), # Bame 문자열 35자. NULL값 허용하지 않음. 기본값 ''
+   
+   PRIMARY KEY (Code) # 프라이머리 키는 ID 필드
+) DEFAULT CHARSET=utf8;
+
+# Foreign key
+# 다른 테이블과의 관계 설정 시, 다른 테이블의 레코드를 특정할 수 있는 필드
+# 주로 다른 테이블의 primary key가 사용 됨
+# 여기서는 students table의 MajorCode 필드가 foreign key가 됨
+
+select * from majors;
+select * from students;
 
 insert into majors(Code, Name, Description) values('CS', 'Computer Science', 'CSCSCSCS');
 insert into majors(Code, Name, Description) values('BIO', 'Biology', 'Biology hahaha');
@@ -183,15 +224,23 @@ insert into majors(Code, Name, Description) values('ECO', 'Economics', 'Even Bet
 select * from students;
 select * from majors;
 
+
 # 교차 조인
 # 존재하는 모든 행에 대해 조인 함
 select *
 	from students s 
     cross join majors m;
     
+select * 
+	from students s, majors m;
+    
 # 혹은 아래와 같이 표현 가능
 select *
-	from students s, majors m;
+	from students s, majors m
+    where s.MajorCode = m.Code;
+    
+    
+    
 
 
 # 내부조인 (inner join)
@@ -210,7 +259,9 @@ select *
 # 외부조인 
 # 내부조인과 달리 일치하지 않는 데이터도 가져오게 됨.
 
+
 # 왼쪽 외부 조인 (left outer join or left join)
+select * from students;
 select *
 	from students s
     left outer join majors m
@@ -222,6 +273,7 @@ select *
     on s.MajorCode = m.Code;
     
 # 오른쪽 외부 조인 (right outer join or right join)
+select * from majors;
 select *
 	from students s
     right outer join majors m
@@ -231,6 +283,8 @@ select *
 	from students s
     right join majors m
     on s.MajorCode = m.Code;
+    
+
     
 
 # 전체 외부 조인 (Mysql 지원하지 않음)
@@ -253,6 +307,7 @@ select *
 
 # 연습문제) courses 테이블과  scores 테이블을 만들고 적당한 데이터를 채우시오.
 
+
 # course table 생성
 # ID, Code, Name
 
@@ -260,12 +315,153 @@ select *
 # ID, StudentID, CourseCode, Score 
 
 
+
+
+
+
+CREATE TABLE course (
+   ID INT(11) NOT NULL AUTO_INCREMENT, # ID 정수형. NULL값 허용하지 않음. 자동 증가하도록 설정
+   Code VARCHAR(20) NOT NULL DEFAULT '', # 문자열 20자. NULL값 허용하지 않음. 기본값 ''
+   Name VARCHAR(50) NOT NULL DEFAULT '', # 문자열 50자. NULL값 허용하지 않음. 기본값 ''
+  PRIMARY KEY (ID) # 프라이머리 키는 ID 필드
+) DEFAULT CHARSET=utf8;
+
+
+
+CREATE TABLE score (
+   ID INT(11) NOT NULL AUTO_INCREMENT, # ID 정수형. NULL값 허용하지 않음. 자동 증가하도록 설정
+   StudentID INT(11) NOT NULL,
+   CourseCode VARCHAR(20) NOT NULL,
+   Score INT(11) NOT NULL,
+  PRIMARY KEY (ID) # 프라이머리 키는 ID 필드
+) DEFAULT CHARSET=utf8;
+
+select * from students;
+
+describe students;
+
+insert into course(Code, Name) values('CS101', 'Introduction to python');
+insert into course(Code, Name) values('CS102', 'Introduction to c++');
+insert into course(Code, Name) values('CS201', 'compilers');
+insert into course(Code, Name) values('CS202', 'algorithms');
+insert into course(Code, Name) values('M101', 'algebra');
+insert into course(Code, Name) values('E101', 'Introduction to economics');
+insert into course(Code, Name) values('E102', 'Introduction to economics2');
+
+
+insert into score(StudentID, CourseCode, Score) values(1, 'CS101', 100);
+insert into score(StudentID, CourseCode, Score) values(1, 'CS102', 95);
+insert into score(StudentID, CourseCode, Score) values(1, 'CS201', 70);
+insert into score(StudentID, CourseCode, Score) values(1, 'CS202', 100);
+insert into score(StudentID, CourseCode, Score) values(1, 'E102', 100);
+
+insert into score(StudentID, CourseCode, Score) values(2, 'CS101', 40);
+insert into score(StudentID, CourseCode, Score) values(2, 'CS102', 50);
+insert into score(StudentID, CourseCode, Score) values(2, 'E101', 100);
+insert into score(StudentID, CourseCode, Score) values(2, 'E102', 100);
+
+
+insert into score(StudentID, CourseCode, Score) values(3, 'E102', 100);
+
+
+insert into score(StudentID, CourseCode, Score) values(6, 'CS101', 50);
+insert into score(StudentID, CourseCode, Score) values(6, 'CS102', 75);
+insert into score(StudentID, CourseCode, Score) values(6, 'CS202', 100);
+insert into score(StudentID, CourseCode, Score) values(6, 'E102', 80);
+
+
+select * from course;
+select * from score;
+
 # 연습문제)
 # 1. 학생별 평균 점수를 구하시오
-# 2. 전공별 평균 점수를 구하시오.
+
+select StudentID, avg(Score)
+	from score
+    group by StudentID;
+
+select st.Name, avg(sc.Score)
+	from students st 
+    join score sc
+    on st.ID = sc.StudentID
+    group by sc.StudentID;
+    
+    
+# 2. 전공 별 평균 점수를 구하시오.
+select * from majors;
+
+select distinct MajorCode from students;
+
+select * from majors;
+
+select * from score;
+
+select m.Name, avg(sc.Score)
+	from students st 
+    
+    join majors m
+    on st.MajorCode = m.Code
+    
+    join score sc
+    on st.ID = sc.StudentID
+    
+    group by m.Code;
+    
+    
+    
+    
+    
+    
+    
+
+select m.Code, m.Name, avg(sc.Score) as mean
+	from students st 
+    
+    join majors m
+    on st.MajorCode = m.Code
+    
+    join score sc
+    on st.ID = sc.StudentID
+    
+    group by st.MajorCode
+    
+    order by mean desc;
+    
+    
+
+
 # 3. 가장 많은 코스를 듣는 학생과 가장 적은 코스를 듣는 학생은?
+
+use test;
+select * from score;
+
+select *
+	from students st
+    right join score sc
+    on st.ID = sc.StudentID;
+
+select st.ID, st.Name, count(*)
+	from students st
+    right join score sc
+    on st.ID = sc.StudentID
+    group by st.ID;
+
 # 4. 전체 평균보다 낮은 점수를 기록한 학생의 이름과 나이를 출력하세요.
 
+select st.Name, Age
+	from students st 
+    join score sc
+    on st.ID = sc.StudentID
+    group by st.ID
+    having avg(Score) < (select avg(Score) 
+							from students st
+							join score sc 
+							on st.ID = sc.StudentID);
+
+select avg(Score) 
+	from students st
+    join score sc 
+    on st.ID = sc.StudentID;
 
 
 # 연습문제 )
@@ -274,4 +470,4 @@ select *
 
 
 # 테이블 버림
-drop table students;
+#drop table students;
