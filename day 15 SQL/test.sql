@@ -462,6 +462,8 @@ select avg(Score)
 	from students st
     join score sc 
     on st.ID = sc.StudentID;
+    
+select *from students;
 
 
 # 연습문제 )
@@ -471,3 +473,9 @@ select avg(Score)
 
 # 테이블 버림
 #drop table students;
+
+
+use test;
+
+select * from news;
+delete from news;
