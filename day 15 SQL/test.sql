@@ -479,3 +479,24 @@ use test;
 
 select * from news;
 delete from news;
+
+
+
+use world;
+
+select * from countrylanguage;
+
+select c1.CountryCode, c1.Language, c1.Percentage
+	from countrylanguage c1
+    join (
+		select CountryCode, max(Percentage) as perc
+			from countrylanguage
+            group by CountryCode) c2
+	on c1.CountryCode = c2.CountryCode and c1.Percentage = c2.perc;
+
+
+
+select * from country;
+
+
+

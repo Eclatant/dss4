@@ -37,7 +37,6 @@ class NaverNewsCrawler(object):
 
         # soup 에서 javascript 제거
         for script in soup(["script", "style"]):
-            dfaf
             script.extract()
 
         # title 추출
@@ -57,7 +56,7 @@ class NaverNewsCrawler(object):
 
         try:
             # 한번에 쓰도록 수정해야함
-            self.newsdao.save_news(link, title, content)
+            self.newsdao.save_news(link, str(title), str(content))
         except Exception, e:
             print e
 
