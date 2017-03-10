@@ -4,14 +4,14 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
+import config as cfg
 import datetime
 from sqlalchemy import create_engine
 from sqlalchemy import PrimaryKeyConstraint
 from sqlalchemy.orm import sessionmaker
 from model import News
 
-server = '127.0.0.1'
-connection_string = 'mysql+mysqldb://root:test1234@{}:3306/test'.format(server)
+connection_string = 'mysql+mysqldb://{}:{}@{}:{}/{}'.format(cfg.DB_USER, cfg.DB_PWD, cfg.DB_HOST, cfg.DB_PORT, cfg.DB_DB)
 engine = create_engine(connection_string, pool_recycle = 3600, encoding='utf-8')
 Session = sessionmaker(bind=engine)
 
