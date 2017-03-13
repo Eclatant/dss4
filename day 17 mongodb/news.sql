@@ -13,3 +13,6 @@ SELECT
     * FROM news;
     
 delete from news;
+
+
+
