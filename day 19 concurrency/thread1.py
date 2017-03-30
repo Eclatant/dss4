@@ -13,7 +13,7 @@ def work():
 t = threading.Thread(target=work)
 # Daemon 설정
 #t.setDaemon(True) 
-#t.daemon = True # 혹인 이렇게도 가능
+t.daemon = True # 혹인 이렇게도 가능
 t.start()
 
 print 'main thread finished'
