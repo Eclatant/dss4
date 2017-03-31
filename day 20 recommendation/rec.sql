@@ -44,7 +44,7 @@ CREATE TABLE `ratings_test` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 # ratings.csv load
-load data local infile '/Users/aaronbyun/Desktop/dss/week9/ml-latest-small/ratings.csv'
+load data local infile '/Users/aaronbyun/Desktop/dss4/day 20 recommendation/ml-latest-small/ratings.csv'
 	into table ratings
     columns terminated by ','
     lines terminated by '\n'
