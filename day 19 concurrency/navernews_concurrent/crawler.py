@@ -24,7 +24,7 @@ class NaverNewsCrawler(object):
             content = res.content
 
             soup = BeautifulSoup(content)
-            
+
             threads = []
             table = soup.find('table', attrs = {'class' : 'container'})
             for a in table.find_all(find_a):
@@ -73,7 +73,7 @@ urls = r.lrange('urls', 0, -1)
 newsdao = NewsDAO()
 crawler = NaverNewsCrawler(newsdao, urls)
 
-import time 
+import time
 start = time.time()
 crawler.crawl_link()
 end = time.time()

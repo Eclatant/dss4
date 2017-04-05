@@ -90,8 +90,23 @@ select * from similarity;
 
 
 
+select * from salary;
 
+# max salary
+select max(salary) from salary;
 
+# 2nd max salary
+select max(salary)	
+	from salary 
+    where salary not in (select max(salary) from salary);
+
+# 2nd max salary
+SELECT *
+FROM salary Emp1
+WHERE (1) = (
+SELECT COUNT(DISTINCT(Emp2.salary))
+FROM salary Emp2
+WHERE Emp2.salary > Emp1.salary);
 
     
     
