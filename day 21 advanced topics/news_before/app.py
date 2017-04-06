@@ -20,7 +20,7 @@ def hello_plain():
 
 @app.route('/json_test')
 def hello_json():
-    data = {'name' : 'Aaron', 'family' : 'Byun'}
+    data = [{'name' : 'Aaron', 'family' : 'Byun'}, {'a' : 1}]
     return jsonify(data)
 
 @app.route('/html_test')
@@ -60,7 +60,7 @@ def simple_post():
     mongo.close()
 
     return '이름 :  {} 나이 : {} 등록 완료'.format(name, age)
-    
+
 
 if __name__ == '__main__':
     # 모든 호스트에서 접속 가능

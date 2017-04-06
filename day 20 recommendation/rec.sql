@@ -108,6 +108,53 @@ SELECT COUNT(DISTINCT(Emp2.salary))
 FROM salary Emp2
 WHERE Emp2.salary > Emp1.salary);
 
+
+
+
+
+
+
+
+
+
+select * 
+	from salary s1
+    where 2 = (select count(distinct(s2.salary))
+						from salary s2
+                        where s2.salary > s1.salary);
+
+
+
+select *
+	from salary
+    order by salary desc
+    limit 2, 1;
     
     
     
+
+
+
+
+
+
+
+
+
+
+
+select * 
+	from students s1
+    where 1 = (select count(distinct(score)) from students s2
+				where s2.score > s1.score)
+
+
+
+
+
+
+
+
+
+
+

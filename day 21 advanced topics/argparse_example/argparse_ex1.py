@@ -5,6 +5,7 @@
 
 import argparse
 parser = argparse.ArgumentParser()
+
 parser.add_argument("num", help="number you want to print from 1")
 args = parser.parse_args()
 
