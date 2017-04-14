@@ -1,0 +1,26 @@
+<html>
+  <head>
+    <title>Simple page</title>
+  </head>
+  <body>
+    <div id='news'>
+      <h3> 검색 된 뉴스 </h3>
+      <table border='1'>
+        <thead>
+          <th>제목</th>
+          <th>카테고리</th>
+          <th>본문</th>
+        </thead>
+        <tbody>
+      {% for n in news %}
+        <tr>
+          <td><a href="{{n['id']}}">{{n['title']}}</a></td>
+          <td>{{n['category']}}</td>
+          <td>{{n['content']}}</td>
+        </tr>
+      {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>
